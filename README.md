@@ -2,6 +2,12 @@
 
 A comprehensive library management system API built with NestJS, MongoDB, and featuring advanced fuzzy search capabilities.
 
+## 🌐 Live Demo
+
+**🚀 Production API**: [https://library-management-tool.vercel.app](https://library-management-tool.vercel.app)
+
+**📚 Interactive Documentation**: [https://library-management-tool.vercel.app/api](https://library-management-tool.vercel.app/api)
+
 ## 🚀 Features
 
 - **CRUD Operations**: Full Create, Read, Update, Delete operations for books
@@ -12,6 +18,7 @@ A comprehensive library management system API built with NestJS, MongoDB, and fe
 - **Swagger Documentation**: Interactive API documentation
 - **MongoDB Integration**: Robust database with proper indexing
 - **Validation**: Comprehensive input validation and error handling
+- **Serverless Deployment**: Optimized for Vercel serverless functions
 
 ## 📋 Requirements
 
@@ -65,6 +72,10 @@ npm run test:e2e
 
 ## 📚 API Endpoints
 
+### Base URL
+- **Production**: `https://library-management-tool.vercel.app`
+- **Local Development**: `http://localhost:3000`
+
 ### Books Management
 
 | Method | Endpoint | Description |
@@ -82,6 +93,14 @@ npm run test:e2e
 | `GET` | `/search` | Fuzzy search books |
 | `GET` | `/search/suggestions` | Get search suggestions |
 
+### Health & Documentation
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/` | Welcome message and API info |
+| `GET` | `/health` | Health check |
+| `GET` | `/api` | Interactive Swagger documentation |
+
 ### Query Parameters
 
 #### Books List (`GET /books`)
@@ -98,7 +117,12 @@ npm run test:e2e
 
 ## 📖 API Documentation
 
-Once the application is running, visit:
+### Production
+- **Swagger UI**: [https://library-management-tool.vercel.app/api](https://library-management-tool.vercel.app/api)
+- **Health Check**: [https://library-management-tool.vercel.app/health](https://library-management-tool.vercel.app/health)
+- **Root Endpoint**: [https://library-management-tool.vercel.app/](https://library-management-tool.vercel.app/)
+
+### Local Development
 - **Swagger UI**: `http://localhost:3000/api`
 - **Health Check**: `http://localhost:3000/health`
 
@@ -113,13 +137,13 @@ The fuzzy search algorithm can handle:
 ### Example Search Queries
 ```bash
 # Search for Harry Potter books
-GET /search?q=harry potter
+GET https://library-management-tool.vercel.app/search?q=harry potter
 
 # Search with custom threshold
-GET /search?q=pottr&threshold=0.4
+GET https://library-management-tool.vercel.app/search?q=pottr&threshold=0.4
 
 # Get search suggestions
-GET /search/suggestions?q=har
+GET https://library-management-tool.vercel.app/search/suggestions?q=har
 ```
 
 ## 🗄️ Database Schema
@@ -179,11 +203,18 @@ MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/library-manageme
 NODE_ENV=production
 ```
 
+### Vercel Configuration
+The project includes optimized configuration for Vercel serverless deployment:
+- **Function timeout**: 60 seconds
+- **Serverless optimization**: Reduced MongoDB connection pool
+- **Static Swagger documentation**: Fast-loading API docs
+- **Graceful error handling**: Proper fallbacks for missing environment variables
+
 ## 🧪 Testing the API
 
 ### Sample Book Creation
 ```bash
-curl -X POST http://localhost:3000/books \
+curl -X POST https://library-management-tool.vercel.app/books \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Harry Potter and the Philosopher\'s Stone",
@@ -197,7 +228,12 @@ curl -X POST http://localhost:3000/books \
 
 ### Sample Search
 ```bash
-curl "http://localhost:3000/search?q=harry&limit=5"
+curl "https://library-management-tool.vercel.app/search?q=harry&limit=5"
+```
+
+### Health Check
+```bash
+curl "https://library-management-tool.vercel.app/health"
 ```
 
 ## 🔧 Configuration
@@ -209,6 +245,12 @@ curl "http://localhost:3000/search?q=harry&limit=5"
 ### Search Configuration
 - Default threshold: 0.3
 - Searchable fields: title (50% weight), author (30% weight), genre (20% weight)
+
+### Serverless Optimization
+- **Cold start handling**: Graceful initialization with fallbacks
+- **Connection pooling**: Optimized for serverless environment
+- **Timeout management**: 60-second function timeout
+- **Error handling**: Comprehensive error responses
 
 ## 📝 Logging
 
@@ -236,7 +278,7 @@ This project is licensed under the MIT License.
 
 For support and questions:
 - Create an issue in the repository
-- Check the Swagger documentation at `/api`
+- Check the Swagger documentation at [https://library-management-tool.vercel.app/api](https://library-management-tool.vercel.app/api)
 - Review the logs for debugging information
 
 ## 🎯 Project Structure
@@ -258,6 +300,9 @@ src/
 │   └── logging.middleware.ts
 ├── app.module.ts         # Main application module
 └── main.ts              # Application entry point
+api/
+├── index.ts             # Main API handler for Vercel
+└── swagger.ts           # Static Swagger documentation
 ```
 
 ## 🔒 Security Features
@@ -267,3 +312,12 @@ src/
 - CORS enabled
 - Proper error handling
 - No sensitive data exposure in logs
+- Serverless security best practices
+
+## 🌟 Production Features
+
+- **High Availability**: Deployed on Vercel's global CDN
+- **Auto-scaling**: Serverless functions scale automatically
+- **Fast Response**: Optimized for quick API responses
+- **Professional Documentation**: Interactive Swagger UI
+- **Health Monitoring**: Built-in health check endpoints

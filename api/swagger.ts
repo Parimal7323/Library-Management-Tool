@@ -69,6 +69,10 @@ export default async function handler(req: any, res: any) {
         {
           url: "https://library-management-tool.vercel.app",
           description: "Production server"
+        },
+        {
+          url: "http://localhost:3000",
+          description: "Local development server"
         }
       ],
       tags: [
@@ -485,7 +489,16 @@ export default async function handler(req: any, res: any) {
                 plugins: [
                   SwaggerUIBundle.plugins.DownloadUrl
                 ],
-                layout: "StandaloneLayout"
+                layout: "StandaloneLayout",
+                tryItOutEnabled: true,
+                requestInterceptor: function(request) {
+                  console.log('Making request to:', request.url);
+                  return request;
+                },
+                responseInterceptor: function(response) {
+                  console.log('Received response:', response);
+                  return response;
+                }
               });
             };
           </script>

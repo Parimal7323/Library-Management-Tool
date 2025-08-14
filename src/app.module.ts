@@ -14,15 +14,43 @@ import { AppController } from './app.controller';
     // Configuration module
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env.local', '.env'],
     }),
     
-    // MongoDB connection with better error handling for serverless
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/library-management', {
-      bufferCommands: false,
-      maxPoolSize: 1, // Important for serverless
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-      family: 4, // Use IPv4
+    // MongoDB connection with graceful fallback for serverless
+    MongooseModule.forRootAsync({
+      useFactory: () => {
+        const mongoUri = process.env.MONGODB_URI;
+        
+        if (!mongoUri) {
+          console.warn('⚠️  MONGODB_URI not found in environment variables');
+          console.warn('📝 Please set MONGODB_URI in Vercel environment variables');
+          console.warn('🔗 Using fallback configuration for demo purposes');
+          
+          // Return a dummy configuration that won't actually connect
+          return {
+            uri: 'mongodb://localhost:27017/library-management',
+            bufferCommands: false,
+            maxPoolSize: 1,
+            serverSelectionTimeoutMS: 1000, // Quick timeout for demo
+            socketTimeoutMS: 5000,
+            family: 4,
+            // This will fail quickly but gracefully
+            retryWrites: false,
+            w: 0,
+          };
+        }
+        
+        console.log('✅ MongoDB URI found, connecting to database...');
+        return {
+          uri: mongoUri,
+          bufferCommands: false,
+          maxPoolSize: 1, // Important for serverless
+          serverSelectionTimeoutMS: 5000,
+          socketTimeoutMS: 45000,
+          family: 4, // Use IPv4
+        };
+      },
     }),
     
     // Rate limiting
